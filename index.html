@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raj's Domain - Referral System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .hover-scale {
+            transition: all 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            animation: slideIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            animation: slideInRight 0.5s;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="mainNav" class="fixed top-0 left-0 right-0 z-50 glass-effect">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold gradient-bg bg-clip-text text-transparent">
+                        Raj's Domain
+                    </h1>
+                </div>
+                <div class="hidden md:flex items-center space-x-4" id="navLinks">
+                    <a href="#home" class="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md">Home</a>
+                    <a href="#features" class="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md">Features</a>
+                    <a href="#pricing" class="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md">Pricing</a>
+                    <a href="#contact" class="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md">Contact</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="showLogin()" class="px-4 py-2 text-sm font-medium text-purple-600 hover:text-purple-800">Login</button>
+                    <button onclick="showRegister()" class="px-4 py-2 text-sm font-medium text-white gradient-bg rounded-lg hover:opacity-90">
+                        Register
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-24 pb-12 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="glass-effect rounded-3xl p-8 md:p-12">
+                <h2 class="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
+                    Earn Money with Referrals
+                </h2>
+                <p class="text-xl text-gray-600 mb-8">
+                    Join now for just <span class="text-purple-600 font-bold">৳150</span> and earn <span class="text-green-600 font-bold">৳50</span> per referral!
+                </p>
+                <p class="text-lg text-gray-500 mb-8">
+                    Special Bonus: Refer 5 people and get an extra <span class="text-orange-500 font-bold">৳25</span> bonus!
+                </p>
+                <button onclick="showRegister()" class="px-8 py-4 text-lg font-semibold text-white gradient-bg rounded-xl hover:opacity-90 hover-scale">
+                    Get Started Now
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="text-3xl font-bold text-white text-center mb-8">Why Join Us?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-effect rounded-2xl p-6 text-center hover-scale">
+                    <div class="text-4xl mb-4">💰</div>
+                    <h4 class="text-xl font-semibold mb-2">Earn Commission</h4>
+                    <p class="text-gray-600">Get ৳50 for every person you refer to the platform</p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center hover-scale">
+                    <div class="text-4xl mb-4">🎯</div>
+                    <h4 class="text-xl font-semibold mb-2">Bonus System</h4>
+                    <p class="text-gray-600">Refer 5 people and earn an extra ৳25 bonus instantly</p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center hover-scale">
+                    <div class="text-4xl mb-4">🔒</div>
+                    <h4 class="text-xl font-semibold mb-2">Secure System</h4>
+                    <p class="text-gray-600">Admin verified deposits and withdrawals for safety</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="text-3xl font-bold text-white text-center mb-8">Simple Pricing</h3>
+            <div class="max-w-md mx-auto">
+                <div class="glass-effect rounded-2xl p-8 text-center">
+                    <h4 class="text-2xl font-bold text-gray-800 mb-4">Entry Fee</h4>
+                    <p class="text-5xl font-bold text-purple-600 mb-4">৳150</p>
+                    <p class="text-gray-600 mb-6">One-time payment to join</p>
+                    <button onclick="showRegister()" class="w-full px-6 py-3 text-white gradient-bg rounded-xl hover:opacity-90">
+                        Join Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Contact -->
+    <section id="contact" class="py-12 px-4">
+        <div class="max-w-3xl mx-auto">
+            <div class="glass-effect rounded-2xl p-8 text-center">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Need Help?</h3>
+                <p class="text-gray-600 mb-4">Contact Admin for any assistance</p>
+                <a href="https://wa.me/8801701826516" target="_blank" class="inline-block px-8 py-4 text-white bg-green-500 rounded-xl hover:bg-green-600 hover-scale">
+                    <span class="text-xl">💬</span> Message Admin on WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content max-w-md mx-auto mt-20">
+            <div class="glass-effect rounded-2xl p-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Login</h3>
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="loginEmail" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 mb-2">Password</label>
+                        <input type="password" id="loginPassword" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    <button type="submit" class="w-full px-6 py-3 text-white gradient-bg rounded-lg hover:opacity-90">
+                        Login
+                    </button>
+                </form>
+                <button onclick="hideModal('loginModal')" class="mt-4 w-full px-4 py-2 text-gray-600 hover:text-gray-800">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content max-w-md mx-auto mt-20">
+            <div class="glass-effect rounded-2xl p-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Register</h3>
+                <form onsubmit="handleRegister(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Full Name</label>
+                        <input type="text" id="regName" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="regEmail" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Password</label>
+                        <input type="password" id="regPassword" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Referral Code (Optional)</label>
+                        <input type="text" id="regReferral" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    <div class="mb-6 p-4 bg-yellow-50 rounded-lg">
+                        <p class="text-sm text-gray-700">Entry Fee: <strong>৳150</strong></p>
+                        <p class="text-sm text-gray-700">Payment must be sent to admin for verification</p>
+                    </div>
+                    <button type="submit" class="w-full px-6 py-3 text-white gradient-bg rounded-lg hover:opacity-90">
+                        Register Now
+                    </button>
+                </form>
+                <button onclick="hideModal('registerModal')" class="mt-4 w-full px-4 py-2 text-gray-600 hover:text-gray-800">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Dashboard -->
+    <div id="userDashboard" class="hidden pt-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="glass-effect rounded-2xl p-6 mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Welcome, <span id="userName"></span></h2>
+                        <p class="text-gray-600">Your Referral Dashboard</p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <button onclick="logout()" class="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <p class="text-gray-600">Your Referral Code</p>
+                    <p class="text-2xl font-bold text-purple-600 mt-2" id="refCode"></p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <p class="text-gray-600">Total Referrals</p>
+                    <p class="text-2xl font-bold text-blue-600 mt-2" id="totalRefs">0</p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <p class="text-gray-600">Balance</p>
+                    <p class="text-2xl font-bold text-green-600 mt-2">৳<span id="balance">0</span></p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <p class="text-gray-600">Bonus Earned</p>
+                    <p class="text-2xl font-bold text-orange-500 mt-2">৳<span id="bonus">0</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-effect rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Referral Link</h3>
+                    <div class="flex">
+                        <input type="text" id="refLink" readonly class="flex-1 px-4 py-2 border rounded-l-lg bg-gray-50">
+                        <button onclick="copyRefLink()" class="px-4 py-2 text-white gradient-bg rounded-r-lg hover:opacity-90">
+                            Copy
+                        </button>
+                    </div>
+                    <div class="mt-4 p-4 bg-green-50 rounded-lg">
+                        <p class="text-sm text-green-800">Share this link and earn ৳50 for each successful referral!</p>
+                    </div>
+                </div>
+
+                <div class="glass-effect rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Withdraw Funds</h3>
+                    <p class="text-gray-600 mb-4">Available Balance: ৳<span id="withdrawBalance">0</span></p>
+                    <form onsubmit="handleWithdraw(event)">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Amount (৳)</label>
+                            <input type="number" id="withdrawAmount" required min="50" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Payment Method</label>
+                            <select id="paymentMethod" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="bkash">bKash</option>
+                                <option value="nagad">Nagad</option>
+                                <option value="rocket">Rocket</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Account Number</label>
+                            <input type="text" id="accountNumber" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        </div>
+                        <button type="submit" class="w-full px-6 py-3 text-white gradient-bg rounded-lg hover:opacity-90">
+                            Request Withdrawal
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-2xl p-6 mt-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Referrals</h3>
+                <div id="referralList" class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left">
+                                <th class="pb-2">Name</th>
+                                <th class="pb-2">Date</th>
+                                <th class="pb-2">Status</th>
+                                <th class="pb-2">Commission</th>
+                            </tr>
+                        </thead>
+                        <tbody id="referralTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="hidden pt-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="glass-effect rounded-2xl p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
+                <p class="text-gray-600">Manage all users and transactions</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <p class="text-gray-600">Total Users</p>
+                    <p class="text-3xl font-bold text-purple-600 mt-2" id="totalUsers">0</p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <p class="text-gray-600">Pending Verification</p>
+                    <p class="text-3xl font-bold text-yellow-600 mt-2" id="pendingUsers">0</p>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <p class="text-gray-600">Total Revenue</p>
+                    <p class="text-3xl font-bold text-green-600 mt-2">৳<span id="totalRevenue">0</span></p>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-2xl p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">User Management</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left">
+                                <th class="pb-2">Name</th>
+                                <th class="pb-2">Email</th>
+                                <th class="pb-2">Referrals</th>
+                                <th class="pb-2">Balance</th>
+                                <th class="pb-2">Status</th>
+                                <th class="pb-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminUserTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-2xl p-6 mt-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Withdrawal Requests</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left">
+                                <th class="pb-2">User</th>
+                                <th class="pb-2">Amount</th>
+                                <th class="pb-2">Method</th>
+                                <th class="pb-2">Account</th>
+                                <th class="pb-2">Status</th>
+                                <th class="pb-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="withdrawalTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database simulation using localStorage
+        class Database {
+            constructor() {
+                this.initialize();
+            }
+
+            initialize() {
+                if (!localStorage.getItem('rajDomainDB')) {
+                    const initialData = {
+                        users: [],
+                        withdrawals: [],
+                        adminAccount: {
+                            email: 'admin@rajsdomain.com',
+                            password: 'admin123',
+                            whatsapp: '8801701826516'
+                        }
+                    };
+                    localStorage.setItem('rajDomainDB', JSON.stringify(initialData));
+                }
+            }
+
+            getData() {
+                return JSON.parse(localStorage.getItem('rajDomainDB'));
+            }
+
+            saveData(data) {
+                localStorage.setItem('rajDomainDB', JSON.stringify(data));
+            }
+
+            createUser(userData) {
+                const data = this.getData();
+                const newUser = {
+                    id: Date.now(),
+                    ...userData,
+                    balance: 0,
+                    bonus: 0,
+                    totalReferrals: 0,
+                    referrals: [],
+                    status: 'pending',
+                    createdAt: new Date().toISOString(),
+                    referralCode: this.generateReferralCode()
+                };
+                data.users.push(newUser);
+                this.saveData(data);
+                return newUser;
+            }
+
+            generateReferralCode() {
+                return 'RJ' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            }
+
+            getUserByEmail(email) {
+                const data = this.getData();
+                return data.users.find(u => u.email === email);
+            }
+
+            getUserByReferralCode(code) {
+                const data = this.getData();
+                return data.users.find(u => u.referralCode === code);
+            }
+
+            updateUser(id, updates) {
+                const data = this.getData();
+                const index = data.users.findIndex(u => u.id === id);
+                if (index !== -1) {
+                    data.users[index] = { ...data.users[index], ...updates };
+                    this.saveData(data);
+                    return data.users[index];
+                }
+                return null;
+            }
+
+            verifyUser(id) {
+                const data = this.getData();
+                const user = this.updateUser(id, { status: 'verified' });
+                
+                // If user was referred, add commission to referrer
+                const userData = data.users.find(u => u.id === id);
+                if (userData && userData.referredBy) {
+                    const referrer = this.getUserByReferralCode(userData.referredBy);
+                    if (referrer) {
+                        const newBalance = referrer.balance + 50;
+                        const newBonus = referrer.bonus + 50;
+                        const newTotalRefs = referrer.totalReferrals + 1;
+                        
+                        // Check if 5 referrals reached for bonus
+                        let additionalBonus = 0;
+                        if (newTotalRefs === 5) {
+                            additionalBonus = 25;
+                        }
+                        
+                        this.updateUser(referrer.id, {
+                            balance: newBalance + additionalBonus,
+                            bonus: newBonus + additionalBonus,
+                            totalReferrals: newTotalRefs,
+                            referrals: [...referrer.referrals, { userId: id, date: new Date().toISOString(), commission: 50 + additionalBonus }]
+                        });
+                    }
+                }
+                return user;
+            }
+
+            addWithdrawal(withdrawalData) {
+                const data = this.getData();
+                data.withdrawals.push({
+                    id: Date.now(),
+                    ...withdrawalData,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                });
+                this.saveData(data);
+            }
+
+            processWithdrawal(id, status) {
+                const data = this.getData();
+                const index = data.withdrawals.findIndex(w => w.id === id);
+                if (index !== -1) {
+                    data.withdrawals[index].status = status;
+                    if (status === 'completed') {
+                        const user = data.users.find(u => u.id === data.withdrawals[index].userId);
+                        if (user) {
+                            this.updateUser(user.id, { balance: user.balance - data.withdrawals[index].amount });
+                        }
+                    }
+                    this.saveData(data);
+                    return data.withdrawals[index];
+                }
+                return null;
+            }
+        }
+
+        const db = new Database();
+        let currentUser = null;
+
+        // UI Functions
+        function showLogin() {
+            hideAllModals();
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function showRegister() {
+            hideAllModals();
+            document.getElementById('registerModal').style.display = 'block';
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function hideAllModals() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => modal.style.display = 'none');
+        }
+
+        // Authentication Functions
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const data = db.getData();
+            
+            // Check admin login
+            if (email === data.adminAccount.email && password === data.adminAccount.password) {
+                showAdminDashboard();
+                hideModal('loginModal');
+                showNotification('Welcome Admin!', 'success');
+                return;
+            }
+
+            const user = db.getUserByEmail(email);
+            if (user && user.password === password) {
+                if (user.status === 'verified') {
+                    currentUser = user;
+                    showUserDashboard();
+                    hideModal('loginModal');
+                    showNotification('Welcome back!', 'success');
+                } else {
+                    showNotification('Your account is pending verification. Please wait for admin approval.', 'warning');
+                }
+            } else {
+                showNotification('Invalid email or password!', 'error');
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const referralCode = document.getElementById('regReferral').value;
+
+            // Validate referral code
+            let referredBy = null;
+            if (referralCode) {
+                const referrer = db.getUserByReferralCode(referralCode);
+                if (!referrer) {
+                    showNotification('Invalid referral code!', 'error');
+                    return;
+                }
+                referredBy = referralCode;
+            }
+
+            // Check if email already exists
+            if (db.getUserByEmail(email)) {
+                showNotification('Email already registered!', 'error');
+                return;
+            }
+
+            const newUser = db.createUser({
+                name,
+                email,
+                password,
+                referredBy,
+                status: 'pending'
+            });
+
+            showNotification('Registration successful! Please wait for admin verification.', 'success');
+            hideModal('registerModal');
+            
+            // Show payment instructions
+            showPaymentInstructions(newUser);
+        }
+
+        function showPaymentInstructions(user) {
+            const instructions = `
+                Registration Successful!
+                
+                To complete your registration:
+                1. Send ৳150 to admin via bKash/Nagad
+                2. Contact admin on WhatsApp with your payment confirmation
+                3. Your account will be verified within 24 hours
+                
+                Your Referral Code: ${user.referralCode}
+                Admin WhatsApp: 8801701826516
+            `;
+            alert(instructions);
+        }
+
+        // Dashboard Functions
+        function showUserDashboard() {
+            document.getElementById('mainNav').style.display = 'none';
+            document.getElementById('userDashboard').classList.remove('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+            
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('refCode').textContent = currentUser.referralCode;
+            document.getElementById('totalRefs').textContent = currentUser.totalReferrals;
+            document.getElementById('balance').textContent = currentUser.balance;
+            document.getElementById('bonus').textContent = currentUser.bonus;
+            document.getElementById('withdrawBalance').textContent = currentUser.balance;
+            
+            const refLink = window.location.origin + '?ref=' + currentUser.referralCode;
+            document.getElementById('refLink').value = refLink;
+            
+            updateReferralTable();
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('mainNav').style.display = 'none';
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            document.getElementById('userDashboard').classList.add('hidden');
+            
+            updateAdminDashboard();
+        }
+
+        function updateReferralTable() {
+            const tbody = document.getElementById('referralTableBody');
+            tbody.innerHTML = '';
+            
+            if (currentUser.referrals && currentUser.referrals.length > 0) {
+                currentUser.referrals.forEach(ref => {
+                    const data = db.getData();
+                    const referredUser = data.users.find(u => u.id === ref.userId);
+                    if (referredUser) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="py-2">${referredUser.name}</td>
+                            <td class="py-2">${new Date(ref.date).toLocaleDateString()}</td>
+                            <td class="py-2"><span class="text-green-600">Completed</span></td>
+                            <td class="py-2">৳${ref.commission}</td>
+                        `;
+                        tbody.appendChild(row);
+                    }
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-gray-500">No referrals yet</td></tr>';
+            }
+        }
+
+        function updateAdminDashboard() {
+            const data = db.getData();
+            const verifiedUsers = data.users.filter(u => u.status === 'verified');
+            const pendingUsers = data.users.filter(u => u.status === 'pending');
+            
+            document.getElementById('totalUsers').textContent = data.users.length;
+            document.getElementById('pendingUsers').textContent = pendingUsers.length;
+            document.getElementById('totalRevenue').textContent = data.users.length * 150;
+            
+            const tbody = document.getElementById('adminUserTable');
+            tbody.innerHTML = '';
+            
+            data.users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="py-2">${user.name}</td>
+                    <td class="py-2">${user.email}</td>
+                    <td class="py-2">${user.totalReferrals}</td>
+                    <td class="py-2">৳${user.balance}</td>
+                    <td class="py-2">
+                        ${user.status === 'verified' 
+                            ? '<span class="text-green-600">Verified</span>' 
+                            : '<span class="text-yellow-600">Pending</span>'}
+                    </td>
+                    <td class="py-2">
+                        ${user.status === 'pending' 
+                            ? `<button onclick="verifyUser(${user.id})" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">Verify</button>` 
+                            : ''}
+                        <button onclick="deleteUser(${user.id})" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 ml-2">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            updateWithdrawalTable();
+        }
+
+        function updateWithdrawalTable() {
+            const data = db.getData();
+            const tbody = document.getElementById('withdrawalTable');
+            tbody.innerHTML = '';
+            
+            data.withdrawals.forEach(withdrawal => {
+                const user = data.users.find(u => u.id === withdrawal.userId);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="py-2">${user ? user.name : 'Unknown'}</td>
+                    <td class="py-2">৳${withdrawal.amount}</td>
+                    <td class="py-2">${withdrawal.method}</td>
+                    <td class="py-2">${withdrawal.accountNumber}</td>
+                    <td class="py-2">
+                        ${withdrawal.status === 'completed' 
+                            ? '<span class="text-green-600">Completed</span>' 
+                            : withdrawal.status === 'rejected'
+                            ? '<span class="text-red-600">Rejected</span>'
+                            : '<span class="text-yellow-600">Pending</span>'}
+                    </td>
+                    <td class="py-2">
+                        ${withdrawal.status === 'pending' 
+                            ? `<button onclick="processWithdrawal(${withdrawal.id}, 'completed')" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">Approve</button>
+                               <button onclick="processWithdrawal(${withdrawal.id}, 'rejected')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 ml-2">Reject</button>` 
+                            : ''}
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Admin Actions
+        function verifyUser(id) {
+            db.verifyUser(id);
+            showNotification('User verified successfully!', 'success');
+            updateAdminDashboard();
+            if (typeof confetti !== 'undefined') {
+                confetti();
+            }
+        }
+
+        function deleteUser(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                const data = db.getData();
+                data.users = data.users.filter(u => u.id !== id);
+                db.saveData(data);
+                updateAdminDashboard();
+                showNotification('User deleted successfully!', 'success');
+            }
+        }
+
+        function processWithdrawal(id, status) {
+            db.processWithdrawal(id, status);
+            showNotification(`Withdrawal ${status} successfully!`, 'success');
+            updateAdminDashboard();
+        }
+
+        // User Actions
+        function copyRefLink() {
+            const refLink = document.getElementById('refLink');
+            refLink.select();
+            document.execCommand('copy');
+            showNotification('Referral link copied!', 'success');
+        }
+
+        function handleWithdraw(event) {
+            event.preventDefault();
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const method = document.getElementById('paymentMethod').value;
+            const accountNumber = document.getElementById('accountNumber').value;
+            
+            if (amount > currentUser.balance) {
+                showNotification('Insufficient balance!', 'error');
+                return;
+            }
+            
+            if (amount < 50) {
+                showNotification('Minimum withdrawal is ৳50!', 'error');
+                return;
+            }
+            
+            db.addWithdrawal({
+                userId: currentUser.id,
+                amount,
+                method,
+                accountNumber
+            });
+            
+            showNotification('Withdrawal request submitted! Admin will process it soon.', 'success');
+            document.getElementById('withdrawAmount').value = '';
+            document.getElementById('accountNumber').value = '';
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('userDashboard').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('mainNav').style.display = 'block';
+            showNotification('Logged out successfully!', 'success');
+        }
+
+        // Utility Functions
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification glass-effect rounded-lg p-4 shadow-lg`;
+            
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <div class="text-white">${message}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white">×</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        // Check for referral code in URL
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+            if (refCode) {
+                document.getElementById('regReferral').value = refCode;
+                showRegister();
+            }
+        };
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                hideAllModals();
+            }
+        };
+    </script>
+</body>
+</html>
